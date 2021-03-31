@@ -1,34 +1,34 @@
 import React from 'react';
 
 class CartItem extends React.Component{
-    constructor(){
-        super();
-        this.state={
-            price: '49,999',
-            title: "Apple iPhoneX",
-            qty: 1,
-            img: ""
-        }
-        // this.increaseQuantity=this.increaseQuantity.bind(this);
-        // this.testing();
-    }
-    testing(){
-        const promise=new Promise((resolve,reject)=>{
-            setTimeout(()=>{resolve()},5000);
-        });
-        promise.then(()=>{
-            this.setState({
-                qty: this.state.qty+1
-            });
-            this.setState({
-                qty: this.state.qty+1
-            });
-            this.setState({
-                qty: this.state.qty+1
-            })
-            console.log(this.state);
-        });
-    }
+    // constructor(){
+    //     super();
+    //     this.state={
+    //         price: '49,999',
+    //         title: "Apple iPhoneX",
+    //         qty: 1,
+    //         img: ""
+    //     }
+    //     // this.increaseQuantity=this.increaseQuantity.bind(this);
+    //     // this.testing();
+    // }
+    // testing(){
+    //     const promise=new Promise((resolve,reject)=>{
+    //         setTimeout(()=>{resolve()},5000);
+    //     });
+    //     promise.then(()=>{
+    //         this.setState({
+    //             qty: this.state.qty+1
+    //         });
+    //         this.setState({
+    //             qty: this.state.qty+1
+    //         });
+    //         this.setState({
+    //             qty: this.state.qty+1
+    //         })
+    //         console.log(this.state);
+    //     });
+    // }
     increaseQuantity=()=>{
         this.setState({
             qty: this.state.qty+1
@@ -50,7 +50,8 @@ class CartItem extends React.Component{
         });
     }
     render(){
-        const {price,title,qty}= this.state;
+        const {price,title,qty}= this.props.product;
+        const {product, onIncreaseQuantity,onDecreaseQuantity,onDeleteProduct}=this.props;
         return (
             <div className="cart-item">
                 <div className="left-block">
@@ -65,18 +66,19 @@ class CartItem extends React.Component{
                             alt="increase" 
                             className="action-icons" 
                             src="https://www.flaticon.com/svg/vstatic/svg/992/992651.svg?token=exp=1617125162~hmac=9053a26e4bf0da08ee699f3dc0f2ffd1" 
-                            onClick={this.increaseQuantity}
+                            onClick={()=>this.props.onIncreaseQuantity(this.props.product)}
                         />
                         <img 
                             alt="decrease" 
                             className="action-icons" 
                             src="https://www.flaticon.com/svg/vstatic/svg/992/992683.svg?token=exp=1617125140~hmac=7db005607e0ed3f779ac0d620549bd97" 
-                            onClick={this.decreaseQuantity}
+                            onClick={()=>this.props.onDecreaseQuantity(this.props.product)}
                         />
                         <img 
                             alt="delete" 
                             className="action-icons" 
                             src="https://www.flaticon.com/svg/vstatic/svg/3096/3096673.svg?token=exp=1617125228~hmac=a0d8534345711d69ebb78a732b38f3b8" 
+                            onClick={()=>onDeleteProduct(product.id)}
                         />
 
                     </div>
