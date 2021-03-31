@@ -1,6 +1,7 @@
 import React from 'react';
 
-class CartItem extends React.Component{
+//changing this to a functional component since there's no state
+const CartItem = (props)=> {
     // constructor(){
     //     super();
     //     this.state={
@@ -29,7 +30,7 @@ class CartItem extends React.Component{
     //         console.log(this.state);
     //     });
     // }
-    increaseQuantity=()=>{
+    const increaseQuantity=()=>{
         this.setState({
             qty: this.state.qty+1
         })
@@ -40,7 +41,7 @@ class CartItem extends React.Component{
         //     }
         // });
     }
-    decreaseQuantity= ()=>{
+    const decreaseQuantity= ()=>{
         this.setState((prevState)=>{
             if(prevState.qty>0){
                 return {
@@ -49,13 +50,15 @@ class CartItem extends React.Component{
             }else return {};
         });
     }
-    render(){
-        const {price,title,qty}= this.props.product;
-        const {product, onIncreaseQuantity,onDecreaseQuantity,onDeleteProduct}=this.props;
+    
+        const {price,title,qty}= props.product;
+        const {product, onIncreaseQuantity,onDecreaseQuantity,onDeleteProduct}=props;
         return (
             <div className="cart-item">
                 <div className="left-block">
-                    <img style={styles.images} />
+                    <img style={styles.images} 
+                        src={product.img}
+                    />
                 </div>
                 <div className="right-block">
                     <div style={{fontSize: 25}}>{title}</div>
@@ -66,13 +69,13 @@ class CartItem extends React.Component{
                             alt="increase" 
                             className="action-icons" 
                             src="https://www.flaticon.com/svg/vstatic/svg/992/992651.svg?token=exp=1617125162~hmac=9053a26e4bf0da08ee699f3dc0f2ffd1" 
-                            onClick={()=>this.props.onIncreaseQuantity(this.props.product)}
+                            onClick={()=>props.onIncreaseQuantity(props.product)}
                         />
                         <img 
                             alt="decrease" 
                             className="action-icons" 
                             src="https://www.flaticon.com/svg/vstatic/svg/992/992683.svg?token=exp=1617125140~hmac=7db005607e0ed3f779ac0d620549bd97" 
-                            onClick={()=>this.props.onDecreaseQuantity(this.props.product)}
+                            onClick={()=>props.onDecreaseQuantity(props.product)}
                         />
                         <img 
                             alt="delete" 
@@ -85,7 +88,7 @@ class CartItem extends React.Component{
                 </div>
             </div>
         )
-    }
+    
 }
 
 const styles = {
