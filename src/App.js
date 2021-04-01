@@ -13,12 +13,12 @@ class App extends React.Component {
       products: [],
       loading: true
     };
+    this.db=firebase.firestore();
   }
 
   componentDidMount(){
     // const firebase =new Firebase();
-    firebase
-    .firestore()
+    this.db
     .collection('products')
     .onSnapshot((snapshot)=>{
       snapshot.docs.forEach((doc)=>{
@@ -38,12 +38,19 @@ class App extends React.Component {
   }
   handleIncreaseQuantity = (product) => {
     const { products } = this.state;
+    console.log(products);
     const index = products.indexOf(product);
-    products[index].qty += 1;
+    // products[index].qty += 1;
 
-    this.setState({
-      products: products,
-    });
+    // this.setState({
+    //   products: products,
+    // });
+    const docRef=this.db.collection('products').doc(products[index].id);
+    docRef.update({
+      qty: products[index].qty+1
+    })
+    .then(()=>console.log("Updated!"))
+    .catch((err)=>console.log(err));
   };
   handleDecreaseQuantity = (product) => {
     const { products } = this.state;
@@ -83,6 +90,23 @@ class App extends React.Component {
     
     return total;
   }
+  addProduct = ()=>{
+    this.db
+    .collection('products')
+    .add({
+      img: "",
+      qty: 3,
+      title: "Washing Machine",
+      price: 25999
+    })
+    .then((docRef)=>{
+      console.log(docRef);
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
+
+  }
   render() {
     const {products,loading}=this.state;
     return (
@@ -90,6 +114,7 @@ class App extends React.Component {
         <Navbar 
           countOfProducts={this.countOfProducts()}
         />
+        {/* <button onClick={this.addProduct}> Add product</button> */}
         <Cart 
           products={products}
           onIncreaseQuantity={this.handleIncreaseQuantity}
