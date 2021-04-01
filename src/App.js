@@ -2,42 +2,39 @@ import React from "react";
 import Cart from "./Cart";
 import "./index.css";
 import Navbar from "./Navbar";
+import firebase from "firebase";
+import "firebase/firestore"
+
 
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      products: [
-        {
-          price: 49999,
-          title: "Apple iPhoneX",
-          qty: 2,
-          img: "https://images.unsplash.com/photo-1525459715390-11a3e77bc887?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=675&q=80",
-          id: 1,
-        },
-        {
-          price: 89999,
-          title: "Microsoft Surface",
-          qty: 1,
-          img: "https://images.unsplash.com/photo-1595245150809-ef9436aaded6?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80",
-          id: 2,
-        },
-        {
-          price: 4999,
-          title: "G-Shock Calibre",
-          qty: 5,
-          img: "https://images.unsplash.com/photo-1605548230903-a22352b062b4?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80",
-          id: 3,
-        },
-        {
-          price: 29999,
-          title: "Apple Watch",
-          qty: 5,
-          img: "https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80",
-          id: 4,
-        },
-      ],
+      products: [],
+      loading: true
     };
+  }
+
+  componentDidMount(){
+    // const firebase =new Firebase();
+    firebase
+    .firestore()
+    .collection('products')
+    .onSnapshot((snapshot)=>{
+      snapshot.docs.forEach((doc)=>{
+        console.log(doc.data());
+      })
+      const products=snapshot.docs.map((doc)=>{
+        const data=doc.data();
+        data['id']=doc.id;
+        return data;
+      });
+      this.setState({
+        products: products,
+        loading:false
+      })
+    })
+   
   }
   handleIncreaseQuantity = (product) => {
     const { products } = this.state;
@@ -76,15 +73,18 @@ class App extends React.Component {
   getCartTotal = ()=>{
     const {products}=this.state;
     let total=0;
+
     products.map((prod)=>{
       total += (prod.qty*(prod.price))
       console.log(prod);
+
+      return "";
     })
     
     return total;
   }
   render() {
-    const {products}=this.state;
+    const {products,loading}=this.state;
     return (
       <div className="App">
         <Navbar 
@@ -96,6 +96,7 @@ class App extends React.Component {
           onDecreaseQuantity={this.handleDecreaseQuantity}
           onDeleteProduct={this.handleDeleteProduct}
         />
+        {loading && <h1>Loading products...</h1>}
         <div>Total: {this.getCartTotal()}</div>
 
       </div>
